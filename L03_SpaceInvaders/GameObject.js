@@ -9,6 +9,7 @@ var L03_SpaceInvaders;
             this.mat = _mat;
             this.mesh = _mesh;
             this.scale = _scale;
+            //this.build();
         }
         build() {
             let cmpTransform = new fc.ComponentTransform();

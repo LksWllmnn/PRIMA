@@ -8,14 +8,18 @@ var L04_SpaceInvaders;
     L04_SpaceInvaders.root.addComponent(new fc.ComponentTransform());
     //Skripte nach laden des HTML aktivieren
     window.addEventListener("load", hndlLoad);
+    let bulletsCounter;
     //Schiff erstellen
     let player = buildPlayerOnMap();
     L04_SpaceInvaders.ableToShoot = true;
-    let activeProjectile = new L04_SpaceInvaders.Projectile("Projectile", player.getCoordinates(), new fc.Vector3(0.2, 0.2, 0.2));
-    activeProjectile.build();
-    activeProjectile.activate(false);
-    L04_SpaceInvaders.root.addChild(activeProjectile);
+    let magazineLength;
+    let nextBullet;
+    //let activeProjectile: Projectile = new Projectile("Projectile", player.getCoordinates(), new fc.Vector3(0.2, 0.2, 0.2));
+    //activeProjectile.build();
+    //activeProjectile.activate(false);
+    //root.addChild(activeProjectile);
     function hndlLoad(_event) {
+        bulletsCounter = document.getElementById("Bullets");
         const canvas = document.querySelector("canvas");
         /////////////////////////////////////////////////////////////////////////////////////////////////////////
         //Walls
@@ -35,8 +39,7 @@ var L04_SpaceInvaders;
         //Loop
         fc.Loop.start(fc.LOOP_MODE.TIME_REAL, 30);
         fc.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, update);
-        console.log(L04_SpaceInvaders.root);
-        console.log(activeProjectile.mtxLocal);
+        console.log(player.getChild(2));
     }
     function buildWallsOnMap() {
         let wallsCollection = new fc.Node("All Walls");
@@ -86,28 +89,40 @@ var L04_SpaceInvaders;
     }
     function update(_event) {
         //root.mtxLocal.rotateY(1);
+        let flyingShots = L04_SpaceInvaders.root.getChildrenByName("Projectile");
+        magazineLength = player.getChild(2).getChildren().length;
+        nextBullet = player.getChild(2).getChild(player.getChild(2).getChildren().length - 1);
+        //Bullet counter
+        if (bulletsCounter) {
+            if (L04_SpaceInvaders.ableToShoot)
+                bulletsCounter.innerHTML = "Bullets: " + magazineLength + " READY TO SHOOT";
+            else {
+                bulletsCounter.innerHTML = "Bullets: " + magazineLength + " RELOAD";
+            }
+        }
+        for (let i = 0; i < flyingShots.length; i++) {
+            if (flyingShots[i].mtxLocal.translation.y <= 17.5)
+                flyingShots[i].fly();
+            if (flyingShots[i].mtxLocal.translation.y >= 17.5) {
+                L04_SpaceInvaders.ableToShoot = true;
+                flyingShots[i].activate(false);
+                L04_SpaceInvaders.root.removeChild(flyingShots[i]);
+            }
+            if (flyingShots[flyingShots.length - 1].mtxLocal.translation.y >= 7.5) {
+                L04_SpaceInvaders.ableToShoot = true;
+            }
+        }
+        //move Ship
         if (fc.Keyboard.isPressedOne([fc.KEYBOARD_CODE.A, fc.KEYBOARD_CODE.ARROW_LEFT])) {
             player.moveLeft();
         }
         if (fc.Keyboard.isPressedOne([fc.KEYBOARD_CODE.D, fc.KEYBOARD_CODE.ARROW_RIGHT])) {
             player.moveRight();
         }
-        //shot flying
-        if (!L04_SpaceInvaders.ableToShoot && activeProjectile != null) {
-            //player.shoot();
-            activeProjectile.fly();
-            if (activeProjectile.mtxLocal.translation.y >= 17.5) {
-                activeProjectile.activate(false);
-                activeProjectile.mtxLocal.translateY(-17.5);
-                activeProjectile.getCoordinates().y -= 17.5;
-                L04_SpaceInvaders.ableToShoot = true;
-            }
-        }
-        //shot aktivating
         if (fc.Keyboard.isPressedOne([fc.KEYBOARD_CODE.SPACE]) && L04_SpaceInvaders.ableToShoot == true) {
             L04_SpaceInvaders.ableToShoot = false;
-            activeProjectile.mtxLocal.translateX(player.mtxLocal.translation.x - activeProjectile.mtxLocal.translation.x);
-            activeProjectile.activate(true);
+            player.shoot(nextBullet);
+            nextBullet.mtxLocal.translateX(player.mtxLocal.translation.x - nextBullet.mtxLocal.translation.x);
         }
         viewport.draw();
     }

@@ -17,6 +17,7 @@ var L04_SpaceInvaders;
             this.addComponent(cmpMat);
         }
         fly() {
+            this.activate(true);
             let offset = this.speed * fc.Loop.timeFrameReal / 1000;
             this.mtxLocal.translateY(offset);
             this.coodrinates.y += offset;

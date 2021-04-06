@@ -5,6 +5,8 @@ namespace L04_SpaceInvaders {
         static mesh: fc.Mesh = new fc.MeshCube("Quad");
         static material: fc.Material = new fc.Material("Green", fc.ShaderUniColor, new fc.CoatColored(fc.Color.CSS("GREEN")));
 
+        //static projectileList: Projectile[];
+
         protected speedShip: number = 5;
         protected reloadTime: number = 5;
         protected canShoot: boolean = true;
@@ -67,8 +69,8 @@ namespace L04_SpaceInvaders {
 
         buildProjectiles(): void {
             let allProjectiles: fc.Node = new fc.Node("all Projectiles");
-            for (let iProjectiles: number = 0; iProjectiles < 1; iProjectiles++) {
-                let projectile: Projectile = new Projectile("Projectile", this.coodrinates, new fc.Vector3(0.01, 0.2, 0.1));
+            for (let iProjectiles: number = 0; iProjectiles < 100; iProjectiles++) { 
+                let projectile: Projectile = new Projectile("Projectile", this.coodrinates, new fc.Vector3(0.2, 0.2, 0.2));
                 projectile.build();
                 projectile.activate(false);
                 allProjectiles.addChild(projectile);
@@ -76,10 +78,10 @@ namespace L04_SpaceInvaders {
             this.addChild(allProjectiles);
         }
 
-        shoot(): void {
-            let activeProjectile: Projectile = new Projectile("Projectile", this.getCoordinates(), new fc.Vector3(0.1, 0.1, 0.1));
-            activeProjectile.build();
-            // root.addChild(activeProjectile);
+        shoot(_nextBullet: Projectile): void { 
+            this.getChild(2).removeChild(_nextBullet);
+            root.addChild(_nextBullet);
+            ableToShoot = false;
         }
 
         getCoordinates(): fc.Vector3 {
@@ -87,7 +89,10 @@ namespace L04_SpaceInvaders {
         }
 
         /*reload(): void {
-            fc.Timer
+            let time: fc.Time = new fc.Time();
+            let timeHander: fc.TimerHandler;
+            let reload: fc.Timer = new fc.Timer(time, 1000, 1, timeHander);
+            console.log(reload);
         }*/
     }
 }

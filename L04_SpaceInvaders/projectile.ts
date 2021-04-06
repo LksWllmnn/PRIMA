@@ -24,6 +24,7 @@ namespace L04_SpaceInvaders {
         }
 
         fly(): void {
+            this.activate(true);
             let offset: number = this.speed * fc.Loop.timeFrameReal / 1000;
             this.mtxLocal.translateY(offset);
             this.coodrinates.y += offset;

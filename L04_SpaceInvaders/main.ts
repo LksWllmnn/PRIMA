@@ -1,5 +1,7 @@
 namespace L04_SpaceInvaders {
     import fc = FudgeCore;
+
+    
     
     let viewport: fc.Viewport = new fc.Viewport();
 
@@ -10,16 +12,24 @@ namespace L04_SpaceInvaders {
     //Skripte nach laden des HTML aktivieren
     window.addEventListener("load", hndlLoad);
 
+    let bulletsCounter: HTMLParagraphElement;
+
     //Schiff erstellen
     let player: Player = buildPlayerOnMap();
     export let ableToShoot: boolean = true;
 
-    let activeProjectile: Projectile = new Projectile("Projectile", player.getCoordinates(), new fc.Vector3(0.2, 0.2, 0.2));
-    activeProjectile.build();
-    activeProjectile.activate(false);
-    root.addChild(activeProjectile);
+    let magazineLength: number;
+    let nextBullet: Projectile;
+
+    //let activeProjectile: Projectile = new Projectile("Projectile", player.getCoordinates(), new fc.Vector3(0.2, 0.2, 0.2));
+    //activeProjectile.build();
+    //activeProjectile.activate(false);
+
+    //root.addChild(activeProjectile);
 
     function hndlLoad(_event: Event): void {
+        bulletsCounter = <HTMLParagraphElement> document.getElementById("Bullets");
+
         const canvas: HTMLCanvasElement = document.querySelector("canvas");
         /////////////////////////////////////////////////////////////////////////////////////////////////////////
         //Walls
@@ -45,9 +55,7 @@ namespace L04_SpaceInvaders {
         fc.Loop.start(fc.LOOP_MODE.TIME_REAL, 30);
         fc.Loop.addEventListener(fc.EVENT.LOOP_FRAME, update);
 
-        console.log(root);
-
-        console.log(activeProjectile.mtxLocal); 
+        console.log(player.getChild(2));
     }
 
     function buildWallsOnMap(): void {
@@ -113,6 +121,36 @@ namespace L04_SpaceInvaders {
     function update(_event: Event): void {
         //root.mtxLocal.rotateY(1);
 
+        let flyingShots: Projectile[] = <Projectile[]>root.getChildrenByName("Projectile");
+
+        magazineLength = player.getChild(2).getChildren().length;
+        nextBullet = <Projectile>player.getChild(2).getChild(player.getChild(2).getChildren().length - 1);
+        
+        //Bullet counter
+        if (bulletsCounter) {
+            if (ableToShoot)
+                bulletsCounter.innerHTML = "Bullets: " + magazineLength + " READY TO SHOOT";
+            else {
+                bulletsCounter.innerHTML = "Bullets: " + magazineLength + " RELOAD";
+            }
+        }
+
+        for (let i: number = 0; i < flyingShots.length; i++) {
+            if (flyingShots[i].mtxLocal.translation.y <= 17.5)
+                flyingShots[i].fly();
+            if (flyingShots[i].mtxLocal.translation.y >= 17.5) {
+                ableToShoot = true;
+                flyingShots[i].activate(false);
+                root.removeChild(flyingShots[i]);
+            }
+            if (flyingShots[flyingShots.length - 1].mtxLocal.translation.y >= 7.5) {
+                ableToShoot = true;
+            }
+        }
+
+
+
+        //move Ship
         if (fc.Keyboard.isPressedOne([fc.KEYBOARD_CODE.A, fc.KEYBOARD_CODE.ARROW_LEFT])) {
             player.moveLeft();
         }
@@ -120,25 +158,11 @@ namespace L04_SpaceInvaders {
             player.moveRight();
         }
 
-        //shot flying
-        if (!ableToShoot  && activeProjectile != null) {
-            //player.shoot();
-            activeProjectile.fly();
-            if (activeProjectile.mtxLocal.translation.y >= 17.5) {
-                activeProjectile.activate(false); 
-                activeProjectile.mtxLocal.translateY(-17.5);
-                activeProjectile.getCoordinates().y -= 17.5; 
-                ableToShoot = true;
-            }
-        }
-        
-        //shot aktivating
         if (fc.Keyboard.isPressedOne([fc.KEYBOARD_CODE.SPACE]) && ableToShoot == true) {
             ableToShoot = false;
-            activeProjectile.mtxLocal.translateX(player.mtxLocal.translation.x - activeProjectile.mtxLocal.translation.x);
-            activeProjectile.activate(true);
+            player.shoot(nextBullet);
+            nextBullet.mtxLocal.translateX(player.mtxLocal.translation.x - nextBullet.mtxLocal.translation.x);
         }
-        
         viewport.draw();
     }
 }

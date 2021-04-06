@@ -5,6 +5,7 @@ var L04_SpaceInvaders;
     class Player extends L04_SpaceInvaders.GameObject {
         constructor(_name, _coodrinates, _scale) {
             super(_name, _coodrinates, _scale);
+            //static projectileList: Projectile[];
             this.speedShip = 5;
             this.reloadTime = 5;
             this.canShoot = true;
@@ -50,18 +51,18 @@ var L04_SpaceInvaders;
         }
         buildProjectiles() {
             let allProjectiles = new fc.Node("all Projectiles");
-            for (let iProjectiles = 0; iProjectiles < 1; iProjectiles++) {
-                let projectile = new L04_SpaceInvaders.Projectile("Projectile", this.coodrinates, new fc.Vector3(0.01, 0.2, 0.1));
+            for (let iProjectiles = 0; iProjectiles < 100; iProjectiles++) {
+                let projectile = new L04_SpaceInvaders.Projectile("Projectile", this.coodrinates, new fc.Vector3(0.2, 0.2, 0.2));
                 projectile.build();
                 projectile.activate(false);
                 allProjectiles.addChild(projectile);
             }
             this.addChild(allProjectiles);
         }
-        shoot() {
-            let activeProjectile = new L04_SpaceInvaders.Projectile("Projectile", this.getCoordinates(), new fc.Vector3(0.1, 0.1, 0.1));
-            activeProjectile.build();
-            // root.addChild(activeProjectile);
+        shoot(_nextBullet) {
+            this.getChild(2).removeChild(_nextBullet);
+            L04_SpaceInvaders.root.addChild(_nextBullet);
+            L04_SpaceInvaders.ableToShoot = false;
         }
         getCoordinates() {
             return this.coodrinates;

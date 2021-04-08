@@ -9,6 +9,7 @@ var L04_SpaceInvaders;
             this.scale = _scale;
         }
         build() {
+            this.rect = new fc.Rectangle(this.coodrinates.x, this.coodrinates.y, this.scale.x, this.scale.y, fc.ORIGIN2D.CENTER);
             let cmpTransform = new fc.ComponentTransform();
             this.addComponent(cmpTransform);
             this.mtxLocal.translate(this.coodrinates);
@@ -22,6 +23,13 @@ var L04_SpaceInvaders;
             cmpMesh.mtxPivot.scaleX(this.scale.x);
             cmpMesh.mtxPivot.scaleY(this.scale.y);
             cmpMesh.mtxPivot.scaleZ(this.scale.z);
+        }
+        gotShot(_target) {
+            return this.rect.collides(_target.rect);
+        }
+        setRectPosition() {
+            this.rect.position.x = this.mtxLocal.translation.x - this.rect.size.x / 2;
+            this.rect.position.y = this.mtxLocal.translation.y - this.rect.size.y / 2;
         }
     }
     GameObject.mesh = new fc.MeshCube("Quad");

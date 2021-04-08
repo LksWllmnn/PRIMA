@@ -9,6 +9,8 @@ namespace L04_SpaceInvaders {
         }
 
         buildElement(): void {
+            this.rect = new fc.Rectangle(this.coodrinates.x, this.coodrinates.y, this.scale.x, this.scale.y, fc.ORIGIN2D.CENTER);
+            
             this.addComponent(new fc.ComponentTransform());
             
             this.buildMesh();
@@ -17,6 +19,7 @@ namespace L04_SpaceInvaders {
             this.addComponent(cmpMatBlock);
             
             this.mtxLocal.translateX(this.coodrinates.x);
+
         }
     }
 }

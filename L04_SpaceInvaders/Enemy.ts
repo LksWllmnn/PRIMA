@@ -42,6 +42,8 @@ namespace L04_SpaceInvaders {
         }
 
         build(): void {
+            this.rect = new fc.Rectangle(this.coodrinates.x, this.coodrinates.y, this.scale.x, this.scale.y, fc.ORIGIN2D.CENTER);
+            
             let cmpTransform: fc.ComponentTransform = new fc.ComponentTransform();
             this.addComponent(cmpTransform);
             this.mtxLocal.translate(this.coodrinates);
@@ -50,6 +52,7 @@ namespace L04_SpaceInvaders {
 
             let cmpMat: fc.ComponentMaterial = new fc.ComponentMaterial(Enemy.material);
             this.addComponent(cmpMat);
+
         }
     }
 }

@@ -9,6 +9,7 @@ var L04_SpaceInvaders;
             this.onField = false;
         }
         build() {
+            this.rect = new fc.Rectangle(this.coodrinates.x, this.coodrinates.y, this.scale.x, this.scale.y, fc.ORIGIN2D.CENTER);
             let cmpTransform = new fc.ComponentTransform();
             this.addComponent(cmpTransform);
             this.mtxLocal.translate(this.coodrinates);
@@ -21,6 +22,7 @@ var L04_SpaceInvaders;
             let offset = this.speed * fc.Loop.timeFrameReal / 1000;
             this.mtxLocal.translateY(offset);
             this.coodrinates.y += offset;
+            this.setRectPosition();
         }
         getCoordinates() {
             return this.coodrinates;

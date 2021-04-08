@@ -7,6 +7,7 @@ var L04_SpaceInvaders;
             super(_name, _coordinates, _scale);
         }
         buildElement() {
+            this.rect = new fc.Rectangle(this.coodrinates.x, this.coodrinates.y, this.scale.x, this.scale.y, fc.ORIGIN2D.CENTER);
             this.addComponent(new fc.ComponentTransform());
             this.buildMesh();
             let cmpMatBlock = new fc.ComponentMaterial(ShieldElement.material);

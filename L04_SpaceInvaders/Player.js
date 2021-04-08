@@ -11,6 +11,7 @@ var L04_SpaceInvaders;
             this.canShoot = true;
         }
         build() {
+            this.rect = new fc.Rectangle(this.coodrinates.x, this.coodrinates.y, this.scale.x, this.scale.y, fc.ORIGIN2D.CENTER);
             let cmpTransform = new fc.ComponentTransform();
             this.addComponent(cmpTransform);
             ///////////////////////////////////////////////////////////////////////
@@ -56,12 +57,13 @@ var L04_SpaceInvaders;
                 projectile.build();
                 projectile.activate(false);
                 allProjectiles.addChild(projectile);
+                //console.log(projectile.rect);
             }
             this.addChild(allProjectiles);
         }
         shoot(_nextBullet) {
             this.getChild(2).removeChild(_nextBullet);
-            L04_SpaceInvaders.root.addChild(_nextBullet);
+            L04_SpaceInvaders.rootProjectiles.addChild(_nextBullet);
             L04_SpaceInvaders.ableToShoot = false;
         }
         getCoordinates() {

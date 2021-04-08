@@ -7,6 +7,7 @@ var L04_SpaceInvaders;
             super(_name, _coordinates, _scale);
         }
         build() {
+            this.rect = new fc.Rectangle(this.coodrinates.x, this.coodrinates.y, this.scale.x, this.scale.y, fc.ORIGIN2D.CENTER);
             let cmpTransform = new fc.ComponentTransform();
             this.addComponent(cmpTransform);
             this.mtxLocal.translate(this.coodrinates);

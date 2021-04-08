@@ -6,9 +6,14 @@ var L04_SpaceInvaders;
     //Wurzel erstellen
     L04_SpaceInvaders.root = new fc.Node("Root");
     L04_SpaceInvaders.root.addComponent(new fc.ComponentTransform());
+    L04_SpaceInvaders.rootProjectiles = new fc.Node("ProjectileRoot");
+    L04_SpaceInvaders.rootProjectiles.addComponent(new fc.ComponentTransform());
+    L04_SpaceInvaders.root.addChild(L04_SpaceInvaders.rootProjectiles);
     //Skripte nach laden des HTML aktivieren
     window.addEventListener("load", hndlLoad);
+    window.addEventListener("keyup", hndlReload);
     let bulletsCounter;
+    let invadersSmall;
     //Schiff erstellen
     let player = buildPlayerOnMap();
     L04_SpaceInvaders.ableToShoot = true;
@@ -62,7 +67,7 @@ var L04_SpaceInvaders;
         let mothership = new L04_SpaceInvaders.Mothership("Mothership", new fc.Vector3(6, 16.5, 0), new fc.Vector3(2, 1, 1));
         mothership.build();
         enemysCollection.addChild(mothership);
-        let invadersSmall = new fc.Node("Small Invaders");
+        invadersSmall = new fc.Node("Small Invaders");
         for (let i = 0; i < 21; i++) {
             let newEnemy = new L04_SpaceInvaders.Enemy("Enemy", L04_SpaceInvaders.startPosEnemys[i].coordinates, new fc.Vector3(1, 1, 1));
             newEnemy.build();
@@ -89,28 +94,36 @@ var L04_SpaceInvaders;
     }
     function update(_event) {
         //root.mtxLocal.rotateY(1);
-        let flyingShots = L04_SpaceInvaders.root.getChildrenByName("Projectile");
         magazineLength = player.getChild(2).getChildren().length;
         nextBullet = player.getChild(2).getChild(player.getChild(2).getChildren().length - 1);
         //Bullet counter
         if (bulletsCounter) {
-            if (L04_SpaceInvaders.ableToShoot)
+            if (L04_SpaceInvaders.ableToShoot && magazineLength > 0) {
                 bulletsCounter.innerHTML = "Bullets: " + magazineLength + " READY TO SHOOT";
-            else {
+            }
+            else if (!L04_SpaceInvaders.ableToShoot && magazineLength > 0) {
                 bulletsCounter.innerHTML = "Bullets: " + magazineLength + " RELOAD";
             }
+            else if (L04_SpaceInvaders.ableToShoot && magazineLength == 0) {
+                bulletsCounter.innerHTML = "Bullets: " + magazineLength + " ... Your empty...";
+            }
         }
-        for (let i = 0; i < flyingShots.length; i++) {
+        /*for (let i: number = 0; i < flyingShots.length; i++) {
             if (flyingShots[i].mtxLocal.translation.y <= 17.5)
                 flyingShots[i].fly();
             if (flyingShots[i].mtxLocal.translation.y >= 17.5) {
-                L04_SpaceInvaders.ableToShoot = true;
+                ableToShoot = true;
                 flyingShots[i].activate(false);
-                L04_SpaceInvaders.root.removeChild(flyingShots[i]);
+                root.removeChild(flyingShots[i]);
             }
             if (flyingShots[flyingShots.length - 1].mtxLocal.translation.y >= 7.5) {
-                L04_SpaceInvaders.ableToShoot = true;
+                ableToShoot = true;
             }
+        }*/
+        for (let projectile of L04_SpaceInvaders.rootProjectiles.getChildren()) {
+            projectile.fly();
+            if (projectile.mtxLocal.translation.y > 17.5)
+                L04_SpaceInvaders.rootProjectiles.removeChild(projectile);
         }
         //move Ship
         if (fc.Keyboard.isPressedOne([fc.KEYBOARD_CODE.A, fc.KEYBOARD_CODE.ARROW_LEFT])) {
@@ -124,7 +137,21 @@ var L04_SpaceInvaders;
             player.shoot(nextBullet);
             nextBullet.mtxLocal.translateX(player.mtxLocal.translation.x - nextBullet.mtxLocal.translation.x);
         }
+        checkProjectileCollision();
         viewport.draw();
+    }
+    function hndlReload() {
+        L04_SpaceInvaders.ableToShoot = true;
+    }
+    function checkProjectileCollision() {
+        for (let projectile of L04_SpaceInvaders.rootProjectiles.getChildren()) {
+            for (let invader of invadersSmall.getChildren()) {
+                if (projectile.gotShot(invader)) {
+                    L04_SpaceInvaders.rootProjectiles.removeChild(projectile);
+                    invadersSmall.removeChild(invader);
+                }
+            }
+        }
     }
 })(L04_SpaceInvaders || (L04_SpaceInvaders = {}));
 //# sourceMappingURL=main.js.map

@@ -16,6 +16,8 @@ namespace L04_SpaceInvaders {
         }
 
          build(): void {
+            this.rect = new fc.Rectangle(this.coodrinates.x, this.coodrinates.y, this.scale.x, this.scale.y, fc.ORIGIN2D.CENTER);
+            
             let cmpTransform: fc.ComponentTransform = new fc.ComponentTransform();
             this.addComponent(cmpTransform);
             
@@ -33,6 +35,7 @@ namespace L04_SpaceInvaders {
             cubePlayer.addComponent(cmpMatCube);
     
             this.appendChild(cubePlayer);
+
             ///////////////////////////////////////////////////////////////////////
             let canon: fc.Node = new fc.Node(this.name + " Canon");
 
@@ -74,13 +77,17 @@ namespace L04_SpaceInvaders {
                 projectile.build();
                 projectile.activate(false);
                 allProjectiles.addChild(projectile);
+
+                //console.log(projectile.rect);
             }
             this.addChild(allProjectiles);
+
+            
         }
 
         shoot(_nextBullet: Projectile): void { 
             this.getChild(2).removeChild(_nextBullet);
-            root.addChild(_nextBullet);
+            rootProjectiles.addChild(_nextBullet);
             ableToShoot = false;
         }
 

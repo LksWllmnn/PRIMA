@@ -57,6 +57,8 @@ namespace L06_SpaceInvaders {
 
     function hndlLoad(_event: Event): void {
         
+        console.log("hi");
+
         buttonMusic = <HTMLButtonElement>document.getElementById("MusicButton");
         if (buttonMusic) {
             buttonMusic.addEventListener("click", hndlMusic);

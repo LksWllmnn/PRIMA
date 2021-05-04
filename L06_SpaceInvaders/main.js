@@ -36,6 +36,7 @@ var L06_SpaceInvaders;
     let magazineLength;
     let nextBullet;
     function hndlLoad(_event) {
+        console.log("hi");
         buttonMusic = document.getElementById("MusicButton");
         if (buttonMusic) {
             buttonMusic.addEventListener("click", hndlMusic);

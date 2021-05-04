@@ -1,0 +1,44 @@
+{
+  "MeshCube|2021-04-27T14:35:40.869Z|38634": {
+    "ƒ.MeshCube": {
+      "idResource": "MeshCube|2021-04-27T14:35:40.869Z|38634",
+      "name": "meshCube",
+      "type": "MeshCube"
+    }
+  },
+  "Material|2021-04-27T14:36:19.162Z|22318": {
+    "ƒ.Material": {
+      "name": "mtrFlat",
+      "idResource": "Material|2021-04-27T14:36:19.162Z|22318",
+      "shader": "ShaderFlat",
+      "coat": {
+        "ƒ.CoatColored": {
+          "name": "Coat",
+          "color": "[1, 1, 1, 1]"
+        }
+      }
+    }
+  },
+  "Graph|2021-04-27T14:38:05.080Z|23338": {
+    "ƒ.Graph": {
+      "name": "root",
+      "components": {},
+      "children": [],
+      "idResource": "Graph|2021-04-27T14:38:05.080Z|23338",
+      "type": "Graph"
+    }
+  },
+  "Material|2021-04-27T14:39:22.016Z|41920": {
+    "ƒ.Material": {
+      "name": "mtrUni",
+      "idResource": "Material|2021-04-27T14:39:22.016Z|41920",
+      "shader": "ShaderUniColor",
+      "coat": {
+        "ƒ.CoatColored": {
+          "name": "Coat",
+          "color": "[1, 1, 1, 1]"
+        }
+      }
+    }
+  }
+}
